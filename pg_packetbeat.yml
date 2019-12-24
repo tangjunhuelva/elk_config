@@ -1,0 +1,14 @@
+packetbeat.protocols.pgsql:
+  ports: [5432]
+  transaction_timeout: 10s
+  processors:
+  - drop_event.when.not.equals.method: SELECT
+  - drop_event.when.equals.client.ip: "::1"
+output.elasticsearch:
+  enabled: true
+  hosts: ["192.168.1.10:9200"]
+  index: psql-%{+yyyy.MM.dd}
+setup.template.name: "packetbeat-%{[agent.version]}"
+setup.template.pattern: "packetbeat-%{[agent.version]}-*"
+setup.ilm.enabled: false
+packetbeat.interfaces.buffer_size_mb: 100
