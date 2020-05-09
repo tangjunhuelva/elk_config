@@ -1,0 +1,58 @@
+GET _ingest/pipeline
+PUT _ingest/pipeline/filebeat-7.6.2-postgresql-log-pipeline
+{
+   "on_failure" : [
+      {
+        "set" : {
+          "field" : "error.message",
+          "value" : "{{ _ingest.on_failure_message }}"
+        }
+      }
+    ],
+    "description" : "Pipeline for parsing PostgreSQL logs.",
+    "processors" : [
+      {
+        "grok" : {
+          "field" : "message",
+          "ignore_missing" : true,
+          "patterns" : [
+            					"%{TIMESTAMP_ISO8601:log_time} CST,\\\"%{WORD:database}\\\",\\\"%{WORD:user_name}\\\",%{NUMBER:process_id},\\\"%{HOSTPORT:connection_from}\\\",%{BASE16FLOAT:session_id},%{NUMBER:session_line_num},\\\"%{WORD:command_tag}\\\",%{TIMESTAMP_ISO8601:session_start_time} CST,%{NUMBER}/%{NUMBER},%{NUMBER},%{WORD},%{WORD},\\\"duration: %{BASE16FLOAT:duration:float} ms  execute %{DATA}: (?<message>(.|\r|\n)*)\\\","
+          ],
+          "pattern_definitions" : {
+            "DATETIME" : "[-0-9]+ %{TIME} %{WORD:event.timezone}",
+            "GREEDYDATA" : """(.|
+|	)*""",
+            "POSTGRESQL_DB_NAME" : """[a-zA-Z0-9_]+[a-zA-Z0-9_\$]*""",
+            "POSTGRESQL_QUERY_STEP" : "%{WORD:postgresql.log.query_step}(?: <unnamed>| %{WORD:postgresql.log.query_name})?"
+          }
+        }
+      },
+      {
+        "date" : {
+          "field" : "postgresql.log.timestamp",
+          "target_field" : "@timestamp",
+          "formats" : [
+            "yyyy-MM-dd HH:mm:ss.SSS zz",
+            "yyyy-MM-dd HH:mm:ss zz"
+          ]
+        }
+      },
+      {
+        "script" : {
+          "source" : "ctx.event.duration = Math.round(ctx.temp.duration * params.scale)",
+          "params" : {
+            "scale" : 1.0
+          },
+          "if" : "ctx.temp?.duration != null",
+          "lang" : "painless"
+        }
+      },
+      {
+        "remove" : {
+          "field" : "temp.duration",
+          "ignore_missing" : true
+        }
+      }
+    ]
+  }
+}
