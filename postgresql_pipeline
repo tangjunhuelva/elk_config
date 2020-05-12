@@ -16,7 +16,7 @@ PUT _ingest/pipeline/filebeat-7.6.2-postgresql-log-pipeline
           "field" : "message",
           "ignore_missing" : true,
           "patterns" : [
-            					"%{TIMESTAMP_ISO8601:log_time} CST,\\\"%{WORD:database}\\\",\\\"%{WORD:user_name}\\\",%{NUMBER:process_id},\\\"%{HOSTPORT:connection_from}\\\",%{BASE16FLOAT:session_id},%{NUMBER:session_line_num},\\\"%{WORD:command_tag}\\\",%{TIMESTAMP_ISO8601:session_start_time} CST,%{NUMBER}/%{NUMBER},%{NUMBER},%{WORD},%{WORD},\\\"duration: %{BASE16FLOAT:duration:float} ms  execute %{DATA}: (?<message>(.|\r|\n)*)\\\","
+            					"%{TIMESTAMP_ISO8601:log_time} CST,\\\"%{WORD:database}\\\",\\\"%{WORD:user_name}\\\",%{NUMBER:process_id},\\\"%{HOSTPORT:connection_from}\\\",%{BASE16FLOAT:session_id},%{NUMBER:session_line_num},\\\"%{WORD:command_tag}\\\",%{TIMESTAMP_ISO8601:session_start_time} CST,%{NUMBER}/%{NUMBER},%{NUMBER},%{WORD},%{WORD},\\\"duration: %{BASE16FLOAT:duration:float} ms  %{WORD} %{DATA}: (?<message>(.|\r|\n)*)\\\","
           ],
           "pattern_definitions" : {
             "DATETIME" : "[-0-9]+ %{TIME} %{WORD:event.timezone}",
