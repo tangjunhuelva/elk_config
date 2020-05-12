@@ -1,0 +1,21 @@
+packetbeat.interfaces.device: eth0
+processors:
+ - drop_fields:
+     fields: ["request","path","beat.hostname","beat.name","beat.version","direction","client_proc","client_server","port","proc"]
+packetbeat.protocols.mysql:
+  ports: [3306]
+  send_request: true
+  transaction_timeout: 30s
+output.elasticsearch:
+  hosts: [XXXXX]
+  work: 1
+  bulk_max_size: 10000
+  timeout: 90
+  flush_interval: 5s
+  template.enabled: true
+  template.name: "packetbeat"
+  template.path: "${path.config}/packetbeat.template.5.json"
+  template.overwrite: false
+  template.versions.2x.enabled: true
+  template.versions.2x.path: "${path.config}/packetbeat.template.2.json"
+  index: xxxxx-%{+yyyy.MM.dd}
