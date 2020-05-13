@@ -2,12 +2,12 @@ packetbeat.protocols.pgsql:
   ports: [5432]
   transaction_timeout: 10s
   processors:
-  - drop_event.when.not.equals.method: SELECT
   - drop_event.when.equals.client.ip: "::1"
+  - drop_fields.fields: ["agent","network","destination","client","ecs","event.category","event.dataset","event.end","event.kind","event.start"]
 output.elasticsearch:
   enabled: true
-  hosts: ["192.168.1.10:9200"]
-  index: psql-%{+yyyy.MM.dd}
+  hosts: ["XXXX:9200"]
+  index: psql-XXXX-%{+yyyy.MM.dd}
 setup.template.name: "packetbeat-%{[agent.version]}"
 setup.template.pattern: "packetbeat-%{[agent.version]}-*"
 setup.ilm.enabled: false
