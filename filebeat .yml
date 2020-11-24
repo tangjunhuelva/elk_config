@@ -3,10 +3,13 @@ filebeat.inputs:
   paths:
     - /var/lib/pgsql/11/data/log/postgresql-Mon.csv
   exclude_lines: [".+?08006[^*].+", ".+?08P01[^*].+"]
+  multiline.pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}'
+  multiline.negate: true
+  multiline.match: after
 output.elasticsearch:
   hosts: ["http://localhost:9200"]
   pipeline: "psql_pipeline"
-  index: "psqlslowlog-xxx-%{+yyyy.MM.dd}"
+  index: "psqlslowlog-coupons-%{+yyyy.MM.dd}"
   username: "elastic"
   password: "123456"
 setup.template.name: "filebeat-%{[agent.version]}"
