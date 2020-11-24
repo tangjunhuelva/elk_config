@@ -49,11 +49,15 @@ PUT _ingest/pipeline/final_psql_csv
       }
     },
     {
-      "kv": {
+      "grok": {
         "field": "message",
-        "field_split": "  ",
-        "value_split": ":",
-        "ignore_failure" : true
+        "patterns": [
+          "duration: %{DATA:duration:float} ms  statement: %{GREEDYDATA:statement}"
+        ],
+        "pattern_definitions": {
+        "GREEDYDATA": "(.|\r|\n)*"
+        }, 
+        "ignore_failure": true
       }
     }
   ]
