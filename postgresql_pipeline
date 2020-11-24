@@ -1,4 +1,4 @@
-PUT _ingest/pipeline/psql_pipline
+PUT _ingest/pipeline/psql_pipeline
 {
     "processors": [
       {
