@@ -8,7 +8,7 @@ filebeat.inputs:
   multiline.match: after
 output.elasticsearch:
   hosts: ["http://localhost:9200"]
-  pipeline: "psql_pipeline"
+  pipeline: "final_psql_csv"
   index: "psqlslowlog-coupons-%{+yyyy.MM.dd}"
   username: "elastic"
   password: "123456"
