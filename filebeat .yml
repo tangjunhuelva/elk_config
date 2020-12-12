@@ -1,7 +1,7 @@
 filebeat.inputs:
 - type: log
   paths:
-    - /var/lib/pgsql/11/data/log/postgresql-Mon.csv
+    - /var/lib/pgsql/11/data/log/*.csv
   exclude_lines: [".+?08006[^*].+", ".+?08P01[^*].+"]
   multiline.pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}'
   multiline.negate: true
