@@ -52,7 +52,7 @@ PUT _ingest/pipeline/final_psql_csv
       "grok": {
         "field": "message",
         "patterns": [
-          "duration: %{DATA:duration:float} ms  statement: %{GREEDYDATA:statement}"
+          "duration: %{DATA:duration:float} ms"
         ],
         "pattern_definitions": {
         "GREEDYDATA": "(.|\r|\n)*"
