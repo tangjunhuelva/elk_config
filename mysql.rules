@@ -5,5 +5,5 @@ groups:
       expr: topk(10,mysql_info_schema_auto_increment_column/mysql_info_schema_auto_increment_column_max) by (instance)
     - record: job:mysql_data_rows:top
       expr: topk(10,mysql_info_schema_table_rows) by(instance)
-    - record: job:mysql_data_free:top
+    - record: job:mysql_data_free:rate
       expr: topk(10,sum(mysql_info_schema_table_size{component="data_free"})by(schema,table,instance) /sum(mysql_info_schema_table_size{component!~"data_free"})by(schema,table,instance) >0) by(instance)
