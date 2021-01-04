@@ -15,3 +15,20 @@ output.elasticsearch:
 setup.template.name: "filebeat-%{[agent.version]}"
 setup.template.pattern: "filebeat-%{[agent.version]}-*"
 setup.ilm.enabled: false
+
+
+filebeat.inputs:
+- type: log
+  paths:
+    - /bdata/data/nowdb2/log-slow-queries.log
+  multiline.pattern: '^(# User@Host: |# Time: )'
+  multiline.negate: true
+  multiline.match: after
+  exclude_lines: ['^[\/\w\.]+, Version: .* started with:.*', '^# Time:.*']
+output.elasticsearch:
+  hosts: ["http://localhost:9200"]
+  pipeline: "filebeat-7.0.0-mysql-slowlog-pipeline"
+  index: "mysqlslowlog-coupons-%{+yyyy.MM.dd}"
+setup.template.name: "filebeat-%{[agent.version]}"
+setup.template.pattern: "filebeat-%{[agent.version]}-*"
+setup.ilm.enabled: false
